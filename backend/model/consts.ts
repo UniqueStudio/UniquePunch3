@@ -6,7 +6,8 @@ export const mongoInfo = {
   database: "punch",
   collections: {
     member: "member",
-    config: "config"
+    config: "config",
+    record:"record"
   }
 };
 

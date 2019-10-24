@@ -16,11 +16,11 @@ export interface IMember {
   gender: 0 | 1;
   avatar: string;
   joinTime: string;
-  punchData: IPunchRecord[];
+  // punchData: IPunchRecord[];
 }
 
 export interface IPunchRecord {
-  groupName: string;
+  ruleName: string;
   punchType: "IN" | "OUT";
   exceptionType?: string;
   punchTime: number;

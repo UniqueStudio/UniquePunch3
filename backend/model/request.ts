@@ -2,6 +2,7 @@ import fetch from "node-fetch";
 import { CORPID, CORPSECRET, mongoInfo } from "./consts";
 import { IMember } from "./member";
 import { databaseConnect } from "./db";
+import { getTime } from "./utils";
 
 interface IResp {
   errcode: number;
@@ -22,6 +23,15 @@ interface IUserList {
     department: number[];
     avatar: string;
     extattr: { attrs: { value: string }[] };
+  }[];
+}
+
+interface IRespPunch {
+  checkindata: {
+    userid: string;
+    checkin_type: string;
+    exception_type: string;
+    checkin_time: number;
   }[];
 }
 
@@ -101,6 +111,7 @@ export const fetchAllMembers = async () => {
 
   if ((await col.countDocuments({})) === 0) {
     await col.insertMany(members);
+    await col.createIndex("userId");
   }
   return;
 };
@@ -111,3 +122,66 @@ export const removeAllMembers = async () => {
   const col = db.collection(collections.member);
   return await col.deleteMany({});
 };
+
+export const fetchPunchRecordByUserlist = async (
+  starttime: number,
+  endtime: number,
+  userlist: string[]
+) => {
+  const access_token = await getAccessToken();
+  const respRaw = await fetch(
+    `https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckindata?access_token=${access_token}`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        opencheckindatatype: 3, // 1 for regular punch, 2 for outdoor punch and 3 for all types of punch
+        starttime, // unix timestamp in second
+        endtime: endtime,
+        useridlist: userlist
+      })
+    }
+  );
+  const resp: IResp & IRespPunch = await respRaw.json();
+
+  if (resp.errcode !== 0) {
+    throw Error(`fetchPunchByUserlist: ${resp.errmsg}`);
+  }
+
+  const { db } = await databaseConnect();
+  const { collections } = mongoInfo;
+  const col = db.collection(collections.record);
+
+  const res = await Promise.all(
+    resp.checkindata.map(punch => {
+      const { checkin_time } = punch;
+      return col.updateOne({ checkin_time }, { $set: punch }, { upsert: true });
+    })
+  );
+};
+
+export const fetchAllPunchRecord = async (
+  starttime: number,
+  endtime: number
+) => {
+  const { db } = await databaseConnect();
+  const { collections } = mongoInfo;
+  const col = db.collection(collections.member);
+  const res = await col
+    .find({})
+    .project({ _id: 0, userId: 1 })
+    .toArray();
+  const userlist = res.map(user => user.userId);
+  const page = Math.floor(userlist.length / 100 + 1);
+  for (let i = 0; i < page; i++) {
+    await fetchPunchRecordByUserlist(
+      starttime,
+      endtime,
+      userlist.slice(i * 100, (i + 1) * 100)
+    );
+  }
+};
+
+// fetchAllPunchRecord(getTime(10, 23, 7), getTime(10, 23, 23));
+// fetchPunchRecordByUserlist(getTime(10, 23, 7), getTime(10, 23, 23), [
+//   "YangShiChu"
+// ]);
