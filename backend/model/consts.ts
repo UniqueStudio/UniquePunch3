@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import { Season, IJoinTime } from "./utils";
 config();
 
 export const mongoInfo = {
@@ -7,8 +8,13 @@ export const mongoInfo = {
   collections: {
     member: "member",
     config: "config",
-    record:"record"
+    record: "record"
   }
+};
+
+export const memberFilter: IJoinTime = {
+  year: 2017,
+  season: 3
 };
 
 export const { CORPID, CORPSECRET } = process.env;
