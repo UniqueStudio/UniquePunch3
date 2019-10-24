@@ -2,24 +2,29 @@ import fetch from "node-fetch";
 import { CORPID, CORPSECRET, mongoInfo, memberFilter } from "./consts";
 import { IMember } from "./member";
 import { databaseConnect } from "./db";
-import { generateTime, getUserList, departmentMap } from "./utils";
+import {
+  generateTime,
+  getUserList,
+  departmentMap,
+  getAccessToken
+} from "./utils";
 
-interface IResp {
+export interface IResp {
   errcode: number;
   errmsg: string;
 }
 
-interface IAccessToken {
+export interface IAccessToken {
   access_token: string;
   expires_in: number;
   updateAt?: number;
 }
 
-interface IUserList {
+export interface IUserList {
   userlist: IUser[];
 }
 
-interface IUser {
+export interface IUser {
   userid: string;
   name: number;
   gender: 0 | 1;
@@ -28,7 +33,7 @@ interface IUser {
   extattr: { attrs: { value: string }[] };
 }
 
-interface IRespPunch {
+export interface IRespPunch {
   checkindata: ICheckInData[];
 }
 
@@ -65,23 +70,6 @@ export const fetchAccessToken = async () => {
     );
   }
   client.close();
-
-  return access_token;
-};
-
-export const getAccessToken = async () => {
-  const { client, db } = await databaseConnect();
-  const { collections } = mongoInfo;
-  const col = db.collection(collections.config);
-  const query: IAccessToken = await col.findOne({ name: "config" });
-  if (!query) {
-    return await fetchAccessToken();
-  }
-  client.close();
-  const { access_token, expires_in, updateAt } = query;
-  if (Date.now() - updateAt >= expires_in * 1000) {
-    return await fetchAccessToken();
-  }
 
   return access_token;
 };
@@ -134,7 +122,6 @@ export const fetchPunchRecordByUserlist = async (
   userlist: IMember[]
 ) => {
   const access_token = await getAccessToken();
-  // console.log( userlist)
   const respRaw = await fetch(
     `https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckindata?access_token=${access_token}`,
     {
@@ -182,7 +169,6 @@ export const fetchAllPunchRecord = async (
   endtime: number
 ) => {
   const userlist = await getUserList();
-  console.log(userlist)
   const page = Math.floor(userlist.length / 100 + 1);
   for (let i = 0; i < page; i++) {
     await fetchPunchRecordByUserlist(
@@ -192,6 +178,3 @@ export const fetchAllPunchRecord = async (
     );
   }
 };
-
-// fetchAllMembers();
-fetchAllPunchRecord(generateTime(10, 20, 0), generateTime(10, 27, 24));

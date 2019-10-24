@@ -16,7 +16,6 @@ export interface IMember {
   gender: 0 | 1;
   avatar: string;
   joinTime: string;
-  // punchData: IPunchRecord[];
 }
 
 export interface IPunchRecord {

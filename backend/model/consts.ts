@@ -17,4 +17,4 @@ export const memberFilter: IJoinTime = {
   season: 3
 };
 
-export const { CORPID, CORPSECRET } = process.env;
+export const { CORPID, CORPSECRET, INIT } = process.env;

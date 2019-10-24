@@ -1,6 +1,7 @@
 import { databaseConnect } from "./db";
 import { mongoInfo, memberFilter } from "./consts";
 import { IMember } from "./member";
+import { IAccessToken, fetchAccessToken } from "./request";
 
 export const departmentMap = {
   1: "Other",
@@ -40,6 +41,23 @@ export const parseJoinTime = (joinTime: string) => {
     }
   });
   return year * 10 + season;
+};
+
+export const getAccessToken = async () => {
+  const { client, db } = await databaseConnect();
+  const { collections } = mongoInfo;
+  const col = db.collection(collections.config);
+  const query: IAccessToken = await col.findOne({ name: "config" });
+  if (!query) {
+    return await fetchAccessToken();
+  }
+  client.close();
+  const { access_token, expires_in, updateAt } = query;
+  if (Date.now() - updateAt >= expires_in * 1000) {
+    return await fetchAccessToken();
+  }
+
+  return access_token;
 };
 
 export const getUserList = async (filter: IJoinTime = memberFilter) => {

@@ -1,10 +1,10 @@
 import { writeFileSync } from "fs";
-import { CORPID, CORPSECRET, mongoInfo } from "./consts";
-import { databaseConnect } from "./db";
-import { getUserList } from "./utils";
-import { ICheckInData } from "./request";
+import { CORPID, CORPSECRET, INIT, mongoInfo } from "./consts";
+import { databaseConnect, init } from "./db";
+import { getUserList, generateTime } from "./utils";
+import { ICheckInData, fetchAllMembers, fetchAllPunchRecord } from "./request";
 
-const processPunchTime = async () => {
+export const processPunchTime = async () => {
   const userlist = await getUserList();
   const { client, db } = await databaseConnect();
   const { collections } = mongoInfo;
@@ -39,7 +39,7 @@ const processPunchTime = async () => {
     res.push({ name, department, punchTime: (punchTime / 3600).toFixed(1) });
   }
   client.close();
-  writeFileSync("punch.json", JSON.stringify(res));
+  return res;
 };
 
 const validatePunch = (record: ICheckInData) => {
@@ -56,5 +56,3 @@ const validatePunchPeriod = (
   const end = new Date(endRecord.checkin_time * 1000);
   return start.getDate() === end.getDate();
 };
-
-processPunchTime();

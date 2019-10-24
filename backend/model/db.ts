@@ -1,5 +1,7 @@
 import { MongoClient } from "mongodb";
 import { mongoInfo } from "./consts";
+import { fetchAllMembers, fetchAllPunchRecord } from "./request";
+import { generateTime } from "./utils";
 
 export const databaseConnect = async function() {
   const { url, database } = mongoInfo;
@@ -11,9 +13,11 @@ export const databaseConnect = async function() {
 };
 
 export const init = async function() {
-  const {db} =await databaseConnect();
-  db.collection(mongoInfo.collections.record).createIndex({userid:1,checkin_time:1});
-  db.collection(mongoInfo.collections.member).createIndex({userid:1});
-}
-
-// init()
+  const { client, db } = await databaseConnect();
+  db.collection(mongoInfo.collections.record).createIndex({
+    userid: 1,
+    checkin_time: 1
+  });
+  db.collection(mongoInfo.collections.member).createIndex({ userid: 1 });
+  client.close();
+};
