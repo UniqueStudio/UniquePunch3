@@ -4,5 +4,5 @@ import { databaseConnect } from "./db";
 
 export const updateAvatar = async () => {
   const { db, client } = await databaseConnect();
-  const { member } = mongoInfo.collection;
+  const { member } = mongoInfo.collections;
 };

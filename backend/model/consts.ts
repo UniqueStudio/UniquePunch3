@@ -1,12 +1,13 @@
-import {config} from "dotenv"
+import { config } from "dotenv";
 config();
 
 export const mongoInfo = {
-    url : process.env.MODE === "DEV" ? "localhost:27017" : "",
-    database:"punch",
-    collection:{
-        member:"member"
-    }
-}
+  url: process.env.MODE === "DEV" ? "localhost:27017" : "",
+  database: "punch",
+  collections: {
+    member: "member",
+    config: "config"
+  }
+};
 
-export const {CORPID,CORPSECRET} = process.env;
+export const { CORPID, CORPSECRET } = process.env;
