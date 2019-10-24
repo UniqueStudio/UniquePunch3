@@ -12,7 +12,7 @@ const processPunchTime = async () => {
   const res = [];
 
   for (const user of userlist) {
-    const { userId: userid, name, department } = user;
+    const { userid: userid, name, department } = user;
     const records: ICheckInData[] = await col
       .find({ userid: userid })
       .sort({ checkin_time: 1 })

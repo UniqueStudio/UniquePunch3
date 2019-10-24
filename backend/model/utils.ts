@@ -48,7 +48,7 @@ export const getUserList = async (filter: IJoinTime = memberFilter) => {
   const col = db.collection(collections.member);
   const res: IMember[] = await col
     .find({})
-    .project({ _id: 0, userId: 1, name: 1, department: 1, joinTime: 1 })
+    .project({ _id: 0, userid: 1, name: 1, department: 1, joinTime: 1 })
     .toArray();
   client.close();
   return res.filter(user => {

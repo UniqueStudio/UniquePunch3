@@ -102,7 +102,7 @@ export const fetchAllMembers = async () => {
     .map(user => {
       return {
         name: user.name,
-        userId: user.userid,
+        userid: user.userid,
         department: user.department.map(dept => departmentMap[dept]),
         gender: user.gender,
         avatar: user.avatar,
@@ -143,7 +143,7 @@ export const fetchPunchRecordByUserlist = async (
         opencheckindatatype: 3, // 1 for regular punch, 2 for outdoor punch and 3 for all types of punch
         starttime, // unix timestamp in second
         endtime: endtime,
-        useridlist: userlist.map(user => user.userId)
+        useridlist: userlist.map(user => user.userid)
       })
     }
   );

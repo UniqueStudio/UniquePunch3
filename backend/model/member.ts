@@ -11,7 +11,7 @@ export type TDepartment =
 
 export interface IMember {
   name: string;
-  userId: string;
+  userid: string;
   department: TDepartment[];
   gender: 0 | 1;
   avatar: string;

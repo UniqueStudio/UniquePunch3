@@ -13,7 +13,7 @@ export const databaseConnect = async function() {
 export const init = async function() {
   const {db} =await databaseConnect();
   db.collection(mongoInfo.collections.record).createIndex({userid:1,checkin_time:1});
-  db.collection(mongoInfo.collections.member).createIndex({userId:1});
+  db.collection(mongoInfo.collections.member).createIndex({userid:1});
 }
 
 // init()
