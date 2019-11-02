@@ -1,20 +1,23 @@
 {
   "name": "unique-punch-backend",
   "version": "3.0.0",
-  "scripts":{
+  "scripts": {
     "start": "ts-node main.ts"
   },
   "license": "MIT",
   "dependencies": {
     "dotenv": "^8.2.0",
     "koa": "^2.10.0",
+    "koa-body": "^4.1.1",
     "koa-jwt": "^3.6.0",
+    "koa-router": "^7.4.0",
     "mongodb": "^3.3.3",
     "node-fetch": "^2.6.0",
     "typescript": "^3.6.4"
   },
   "devDependencies": {
     "@types/koa": "^2.0.51",
+    "@types/koa-router": "^7.0.42",
     "@types/mongodb": "^3.3.6",
     "@types/node": "^12.11.6",
     "@types/node-fetch": "^2.5.2"

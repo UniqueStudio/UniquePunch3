@@ -1,5 +1,6 @@
 import { config } from "dotenv";
-import { Season, IJoinTime } from "./utils";
+import { IJoinTime } from "./utils";
+
 config();
 
 export const mongoInfo = {

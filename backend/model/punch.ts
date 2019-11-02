@@ -1,8 +1,8 @@
 import { writeFileSync } from "fs";
 import { CORPID, CORPSECRET, INIT, mongoInfo } from "./consts";
-import { databaseConnect, init } from "./db";
-import { getUserList, generateTime } from "./utils";
-import { ICheckInData, fetchAllMembers, fetchAllPunchRecord } from "./request";
+import { databaseConnect } from "./db";
+import { getUserList } from "./utils";
+import { ICheckInData } from "./request";
 
 export const processPunchTime = async () => {
   const userlist = await getUserList();
@@ -36,18 +36,31 @@ export const processPunchTime = async () => {
           needIn = false;
         }
       });
-    res.push({ name, department, punchTime: (punchTime / 3600).toFixed(1) });
+    res.push({
+      name,
+      group: department,
+      time: parseFloat((punchTime / 3600).toFixed(1))
+    });
   }
   client.close();
   return res;
 };
-
+/**
+ *
+ * @param record
+ * @description To check if the given record is valid (6:00 to 24:00 only).
+ */
 const validatePunch = (record: ICheckInData) => {
   const date = new Date(record.checkin_time * 1000);
   const hour = date.getHours();
   return record.exception_type.length === 0 && hour >= 6 && hour < 24;
 };
-
+/**
+ *
+ * @param startRecord
+ * @param endRecord
+ * @description To check if the given records are generated in the same day.
+ */
 const validatePunchPeriod = (
   startRecord: ICheckInData,
   endRecord: ICheckInData

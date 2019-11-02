@@ -91,7 +91,9 @@ export const fetchAllMembers = async () => {
       return {
         name: user.name,
         userid: user.userid,
-        department: user.department.map(dept => departmentMap[dept]),
+        department: user.department
+          .filter(dept => dept !== 1)
+          .map(dept => departmentMap[dept]),
         gender: user.gender,
         avatar: user.avatar,
         joinTime: user.extattr.attrs[0].value
@@ -143,7 +145,6 @@ export const fetchPunchRecordByUserlist = async (
   const { client, db } = await databaseConnect();
   const { collections } = mongoInfo;
   const col = db.collection(collections.record);
-
   const res = await Promise.all(
     resp.checkindata.map(punch => {
       const { userid, checkin_type, checkin_time, exception_type } = punch;
@@ -171,6 +172,7 @@ export const fetchAllPunchRecord = async (
   const userlist = await getUserList();
   const page = Math.floor(userlist.length / 100 + 1);
   for (let i = 0; i < page; i++) {
+    console.log("")
     await fetchPunchRecordByUserlist(
       starttime,
       endtime,
