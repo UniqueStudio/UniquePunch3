@@ -1,20 +1,29 @@
-import * as Koa from "koa";
-import * as jwt from "koa-jwt";
-import * as body from "koa-body";
+import Koa from "koa";
+import serve from "koa-static";
+import cors from "koa2-cors";
+
+import Router from "koa-router";
+import { logger } from "./controller/middlewares";
+import punchJson from "./punch.json";
+import { screenshotThenExit } from "./screenshot";
 
 const app = new Koa();
+const router = new Router();
 
-app.use(async (ctx, next) => {
-  const startTime = Date.now();
-  await next();
-  const processTime = Date.now() - startTime;
-  console.log(`${ctx.method} ${ctx.url} from ${ctx.ip} in ${processTime}ms`);
+router.get("/punch", async (ctx, next) => {
+  ctx.response.body = JSON.stringify(punchJson);
+  next();
 });
 
-app.use(body);
+// app.use(logger);
+app.use(cors());
+app.use(serve("."));
+app.use(serve("../frontend/dist/frontend"));
+app.use(router.routes()).use(router.allowedMethods());
 
-app.use(ctx => {
-  ctx.body = "test";
-});
-
-app.listen(3000);
+export const serverStart = async () => {
+  app.listen(5000, () => {
+    console.log("running on http://localhost:5000");
+    screenshotThenExit();
+  });
+};

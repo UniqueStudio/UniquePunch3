@@ -8,6 +8,7 @@ import {
   departmentMap,
   getAccessToken
 } from "./utils";
+import { fetchAvatar } from "./avatar";
 
 export interface IResp {
   errcode: number;
@@ -69,7 +70,7 @@ export const fetchAccessToken = async () => {
       { $set: { access_token, expires_in, updateAt } }
     );
   }
-  client.close();
+  await client.close();
 
   return access_token;
 };
@@ -95,7 +96,7 @@ export const fetchAllMembers = async () => {
           .filter(dept => dept !== 1)
           .map(dept => departmentMap[dept]),
         gender: user.gender,
-        avatar: user.avatar,
+        avatar: fetchAvatar(user),
         joinTime: user.extattr.attrs[0].value
       };
     });
@@ -107,7 +108,7 @@ export const fetchAllMembers = async () => {
   if ((await col.countDocuments({})) === 0) {
     await col.insertMany(members);
   }
-  client.close();
+  await client.close();
 };
 
 export const removeAllMembers = async () => {
@@ -115,7 +116,7 @@ export const removeAllMembers = async () => {
   const { collections } = mongoInfo;
   const col = db.collection(collections.member);
   await col.deleteMany({});
-  client.close();
+  await client.close();
 };
 
 export const fetchPunchRecordByUserlist = async (
@@ -162,7 +163,7 @@ export const fetchPunchRecordByUserlist = async (
       );
     })
   );
-  client.close();
+  await client.close();
 };
 
 export const fetchAllPunchRecord = async (
@@ -172,11 +173,18 @@ export const fetchAllPunchRecord = async (
   const userlist = await getUserList();
   const page = Math.floor(userlist.length / 100 + 1);
   for (let i = 0; i < page; i++) {
-    console.log("")
     await fetchPunchRecordByUserlist(
       starttime,
       endtime,
       userlist.slice(i * 100, (i + 1) * 100)
     );
   }
+};
+
+export const removeAllRecords = async () => {
+  const { client, db } = await databaseConnect();
+  const { collections } = mongoInfo;
+  const col = db.collection(collections.record);
+  await col.deleteMany({});
+  await client.close();
 };

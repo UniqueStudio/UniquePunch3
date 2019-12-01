@@ -2,6 +2,7 @@ import { databaseConnect } from "./db";
 import { mongoInfo, memberFilter } from "./consts";
 import { IMember } from "./member";
 import { IAccessToken, fetchAccessToken } from "./request";
+import blacklist from "../blacklist.json";
 
 export const departmentMap = {
   1: "Other",
@@ -51,7 +52,7 @@ export const getAccessToken = async () => {
   if (!query) {
     return await fetchAccessToken();
   }
-  client.close();
+  await client.close();
   const { access_token, expires_in, updateAt } = query;
   if (Date.now() - updateAt >= expires_in * 1000) {
     return await fetchAccessToken();
@@ -66,11 +67,21 @@ export const getUserList = async (filter: IJoinTime = memberFilter) => {
   const col = db.collection(collections.member);
   const res: IMember[] = await col
     .find({})
-    .project({ _id: 0, userid: 1, name: 1, department: 1, joinTime: 1 })
+    .project({
+      _id: 0,
+      userid: 1,
+      name: 1,
+      department: 1,
+      joinTime: 1,
+      avatar: 1
+    })
     .toArray();
-  client.close();
+  await client.close();
   return res.filter(user => {
     const joinTime = parseJoinTime(user.joinTime);
-    return joinTime >= filter.year * 10 + filter.season;
+    return (
+      joinTime >= filter.year * 10 + filter.season &&
+      !blacklist.includes(user.userid)
+    );
   });
 };

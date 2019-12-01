@@ -2,24 +2,30 @@
   "name": "unique-punch-backend",
   "version": "3.0.0",
   "scripts": {
-    "start": "ts-node main.ts"
+    "start": "docker-compose up -d && ts-node main.ts && docker-compose down"
   },
   "license": "MIT",
   "dependencies": {
+    "@types/koa2-cors": "^2.0.1",
     "dotenv": "^8.2.0",
     "koa": "^2.10.0",
     "koa-body": "^4.1.1",
     "koa-jwt": "^3.6.0",
     "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "koa2-cors": "^2.0.6",
     "mongodb": "^3.3.3",
     "node-fetch": "^2.6.0",
+    "puppeteer": "^2.0.0",
     "typescript": "^3.6.4"
   },
   "devDependencies": {
     "@types/koa": "^2.0.51",
     "@types/koa-router": "^7.0.42",
+    "@types/koa-static": "^4.0.1",
     "@types/mongodb": "^3.3.6",
     "@types/node": "^12.11.6",
-    "@types/node-fetch": "^2.5.2"
+    "@types/node-fetch": "^2.5.2",
+    "@types/puppeteer": "^2.0.0"
   }
 }

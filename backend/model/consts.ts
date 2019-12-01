@@ -18,4 +18,9 @@ export const memberFilter: IJoinTime = {
   season: 3
 };
 
-export const { CORPID, CORPSECRET, INIT } = process.env;
+export const { CORPID, CORPSECRET, INIT, UPDATE_AVATAR } = process.env;
+
+export const dateRange = {
+  start: process.env.START_DATE.split("."),
+  end: process.env.END_DATE.split(".")
+};

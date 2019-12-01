@@ -37,9 +37,10 @@ export const processPunchTime = async () => {
         }
       });
     res.push({
+      userid,
       name,
       group: department,
-      time: parseFloat((punchTime / 3600).toFixed(1))
+      time: (punchTime / 3600).toFixed(1)
     });
   }
   client.close();

@@ -1,8 +1,10 @@
 {
-    "compilerOptions": {
-        "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true,
-        "module":"commonjs",
-        "allowJs": true
-    },
+  "compilerOptions": {
+    "target": "esnext",
+    "resolveJsonModule": true,
+    // "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "allowJs": true
+  }
 }
