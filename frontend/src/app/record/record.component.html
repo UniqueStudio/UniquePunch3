@@ -1,0 +1,23 @@
+<div class="center">
+  <h1>UniquePunch</h1>
+  <h4>{{ data.startTime }} - {{ data.endTime }}</h4>
+</div>
+<div class="container">
+  <div
+    class="record"
+    *ngFor="let record of data.data; let i = index"
+    [class.failed]="record.time < 40 && record.time > 0"
+    [class.passed]="record.time >= 40"
+    [class.zero]="record.time == 0"
+  >
+    <div class="item-container">
+      <img
+        class="avatar"
+        src="http://localhost:5000/avatar/{{ record.userid }}.jpeg"
+      />
+      <div class="item tag">{{ record.group }}</div>
+      <div class="item ">{{ record.name }}</div>
+      <div class="item time">🕒 {{ record.time }}</div>
+    </div>
+  </div>
+</div>
