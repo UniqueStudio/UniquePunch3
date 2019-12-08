@@ -1,17 +1,18 @@
 import Koa from "koa";
 import serve from "koa-static";
 import cors from "koa2-cors";
-
 import Router from "koa-router";
+import { readFileSync } from "fs";
+
 import { logger } from "./controller/middlewares";
-import punchJson from "./punch.json";
 import { screenshotThenExit } from "./screenshot";
 
 const app = new Koa();
 const router = new Router();
 
 router.get("/punch", async (ctx, next) => {
-  ctx.response.body = JSON.stringify(punchJson);
+  const punchJsonBuffer = readFileSync("./punch.json");
+  ctx.response.body = punchJsonBuffer.toString();
   next();
 });
 

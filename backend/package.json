@@ -1,5 +1,7 @@
 {
   "name": "unique-punch-backend",
+  "description": "CLI that generates unique weekly punch ranking.",
+  "author": "maniacata",
   "version": "3.0.0",
   "scripts": {
     "start": "docker-compose up -d && ts-node main.ts && docker-compose down"
