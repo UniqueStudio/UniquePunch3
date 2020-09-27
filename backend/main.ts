@@ -7,7 +7,7 @@ import {
 } from "./model/request";
 import { generateTime } from "./model/utils";
 import { processPunchTime } from "./model/punch";
-import { INIT, dateRange } from "./model/consts";
+import { INIT, dateRange, thisYear } from "./model/consts";
 import { writeFile } from "fs";
 import { serverStart } from "./server";
 
@@ -38,8 +38,8 @@ const { start, end } = dateRange;
   writeFile(
     "punch.json",
     JSON.stringify({
-      startTime: `2019-${start[0]}-${start[1]} 00:00`,
-      endTime: `2019-${end[0]}-${end[1]} 24:00`,
+      startTime: `${thisYear}-${start[0]}-${start[1]} 00:00`,
+      endTime: `${thisYear}-${end[0]}-${end[1]} 24:00`,
       data: res.sort((a, b) => b.time - a.time)
     }),
     async () => {
