@@ -2,7 +2,7 @@ import { databaseConnect } from "./db";
 import { mongoInfo, memberFilter, thisYear } from "./consts";
 import { IMember } from "./member";
 import { IAccessToken, fetchAccessToken } from "./request";
-import blacklist from "../blacklist.json";
+import blocklist from "../blocklist.json";
 
 export const departmentMap = {
   1: "Other",
@@ -81,7 +81,7 @@ export const getUserList = async (filter: IJoinTime = memberFilter) => {
     const joinTime = parseJoinTime(user.joinTime);
     return (
       joinTime >= filter.year * 10 + filter.season &&
-      !blacklist.includes(user.userid)
+      !blocklist.includes(user.userid)
     );
   });
 };
