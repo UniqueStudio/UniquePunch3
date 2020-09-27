@@ -9,18 +9,20 @@ export const mongoInfo = {
   collections: {
     member: "member",
     config: "config",
-    record: "record"
-  }
+    record: "record",
+  },
 };
 
+export const thisYear = new Date().getFullYear();
+
 export const memberFilter: IJoinTime = {
-  year: 2017,
-  season: 3
+  year: thisYear - 2,
+  season: 3, // for '秋'
 };
 
 export const { CORPID, CORPSECRET, INIT, UPDATE_AVATAR } = process.env;
 
 export const dateRange = {
   start: process.env.START_DATE.split("."),
-  end: process.env.END_DATE.split(".")
+  end: process.env.END_DATE.split("."),
 };

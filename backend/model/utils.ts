@@ -1,5 +1,5 @@
 import { databaseConnect } from "./db";
-import { mongoInfo, memberFilter } from "./consts";
+import { mongoInfo, memberFilter, thisYear } from "./consts";
 import { IMember } from "./member";
 import { IAccessToken, fetchAccessToken } from "./request";
 import blacklist from "../blacklist.json";
@@ -27,7 +27,7 @@ export const generateTime = (
   month,
   day,
   hour,
-  year = new Date().getFullYear()
+  year = thisYear
 ) => {
   const date = Date.UTC(year, month - 1, day, hour - 8, 0, 0, 0) / 1000;
   return date;
