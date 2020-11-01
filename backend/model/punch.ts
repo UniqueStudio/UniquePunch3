@@ -1,7 +1,7 @@
 import { writeFileSync } from "fs";
-import { CORPID, CORPSECRET, INIT, mongoInfo } from "./consts";
+import { CORPID, CORPSECRET, INIT, mongoInfo, THRESHOLD } from "./consts";
 import { databaseConnect } from "./db";
-import { getUserList } from "./utils";
+import { getUserList, parseJoinTime } from "./utils";
 import { ICheckInData } from "./request";
 
 export const processPunchTime = async () => {
@@ -12,7 +12,7 @@ export const processPunchTime = async () => {
   const res = [];
 
   for (const user of userlist) {
-    const { userid: userid, name, department } = user;
+    const { userid: userid, name, department, joinTime } = user;
     const records: ICheckInData[] = await col
       .find({ userid: userid })
       .sort({ checkin_time: 1 })
@@ -36,11 +36,13 @@ export const processPunchTime = async () => {
           needIn = false;
         }
       });
+      const time = (punchTime / 3600).toFixed(1);
     res.push({
       userid,
       name,
       group: department,
-      time: (punchTime / 3600).toFixed(1)
+      time,
+      passed: parseJoinTime(joinTime) < +THRESHOLD ? 30 : 40,
     });
   }
   client.close();

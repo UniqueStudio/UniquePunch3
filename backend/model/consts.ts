@@ -20,7 +20,7 @@ export const memberFilter: IJoinTime = {
   season: 3, // for '秋'
 };
 
-export const { CORPID, CORPSECRET, INIT, UPDATE_AVATAR } = process.env;
+export const { CORPID, CORPSECRET, INIT, UPDATE_AVATAR, THRESHOLD } = process.env;
 
 export const dateRange = {
   start: process.env.START_DATE.split("."),
